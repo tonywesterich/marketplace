@@ -1,0 +1,51 @@
+version: '3.9'
+services:
+  accounts_db:
+    container_name: accounts_db
+    image: postgres
+    environment:
+      POSTGRES_DB: 'accounts'
+      POSTGRES_USER: 'accounts'
+      POSTGRES_PASSWORD: 'secret'
+    ports:
+      - 5432:5432
+    volumes:
+      - ./accounts/docker-entrypoint/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U accounts", "pg_isready"]
+      interval: 10s
+      timeout: 1s
+      retries: 10
+    networks:
+      - marketplace
+
+  accounts_api:
+    container_name: accounts_api
+    build:
+      context: accounts
+    depends_on:
+      accounts_db:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    networks:
+      - marketplace
+    deploy:
+      resources:
+        limits:
+          memory: "100M"
+          cpus: "0.1"
+        reservations:
+          memory: "50M"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    env_file:
+      - ./accounts/.env.prod
+    command: ["node", "--max-old-space-size=90", "./dist/server.js"]
+
+networks:
+  marketplace:
+    name: marketplace
