@@ -1,0 +1,44 @@
+name: 'Accounts - Continuous integration'
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths: [ 'accounts/**' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-nodev-${{ matrix.node-version }}
+
+      - name: Enter in accounts folder
+        run: cd ./accounts
+
+      - name: Install dependencies
+        if: steps.carthage-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Test
+        run: npm run test
