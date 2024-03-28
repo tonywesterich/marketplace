@@ -37,10 +37,13 @@ jobs:
         run: |
           ls
           cd ./accounts
+          ls
 
       - name: Install dependencies
         if: steps.carthage-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          ls
+          npm ci
 
       - name: Test
         run: npm run test
