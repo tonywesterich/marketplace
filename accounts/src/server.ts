@@ -31,3 +31,5 @@ framework
   .middlewareError(middleware.error)
   .build()
   .up();
+
+console.log('Test CI');
