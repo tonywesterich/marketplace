@@ -33,12 +33,13 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-nodev-${{ matrix.node-version }}
 
-      - name: Enter in accounts folder
-        run: cd ./accounts
-
       - name: Install dependencies
         if: steps.carthage-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          cd ./accounts
+          npm ci
 
       - name: Test
-        run: npm run test
+        run: |
+          cd ./accounts
+          npm run test
