@@ -24,6 +24,10 @@
     "@root": ".",
     "@src": "src/"
   },
+  "engines": {
+    "npm": "^9",
+    "yarn": "please-use-npm"
+  },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
