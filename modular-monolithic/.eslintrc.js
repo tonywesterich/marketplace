@@ -5,10 +5,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: [
-    '@typescript-eslint/eslint-plugin',
-    'no-relative-import-paths'
-  ],
+  plugins: ['@typescript-eslint/eslint-plugin', 'no-relative-import-paths'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -24,13 +21,27 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'error',
     'no-relative-import-paths/no-relative-import-paths': [
       'warn',
       {
         allowSameFolder: true,
         prefix: '@app',
-        rootDir: 'src'
-      }
+        rootDir: 'src',
+      },
+    ],
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: '@nestjs/config',
+            importNames: ['ConfigModule', 'ConfigService'],
+            message:
+              'Please use classes from @app/shared/module/config instead',
+          },
+        ],
+      },
     ],
   },
 };
