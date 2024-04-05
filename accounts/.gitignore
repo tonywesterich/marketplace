@@ -4,3 +4,4 @@ tmp
 *.http
 TODO
 *.sqlite
+.env
