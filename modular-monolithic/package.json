@@ -21,7 +21,11 @@
     "test:e2e:watch": "npm run test:e2e -- --watch",
     "test:integration": "jest --runInBand --config ./test/jest.integration.ts",
     "test:integration:watch": "npm run test:integration -- --watch",
-    "test:type": "tsc --noEmit"
+    "test:type": "tsc --noEmit",
+    "db:setup": "npm run db:migrate",
+    "db:migrate": "prisma db push",
+    "db:setup:test": "npm run db:migrate:test",
+    "db:migrate:test": "dotenv -e .env.test -- prisma db push"
   },
   "engines": {
     "npm": "^9",
@@ -35,10 +39,12 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/graphql": "^12.1.1",
     "@nestjs/platform-express": "^10.0.0",
+    "@prisma/client": "^5.12.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "eslint-plugin-no-relative-import-paths": "^1.5.3",
     "graphql": "^16.8.1",
+    "http-status-codes": "^2.3.0",
     "module-alias": "^2.2.3",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
@@ -62,12 +68,16 @@
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.2.4",
+    "prisma": "^5.12.1",
     "source-map-support": "^0.5.21",
-    "supertest": "^6.3.3",
+    "supertest": "^6.3.4",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
+  },
+  "prisma": {
+    "schema": "database/identity/prisma/schema.prisma"
   }
 }

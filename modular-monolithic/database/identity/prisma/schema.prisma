@@ -1,0 +1,29 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public"]
+}
+
+model customer {
+  id         String   @id
+  name       String   @db.VarChar(50)
+  email      String   @db.VarChar(60)   @unique
+  cpfCnpj    String   @db.VarChar(14)   @unique
+  cellPhone  String   @db.VarChar(11)
+  birthdate  DateTime @db.Date()
+  zipCode    String   @db.VarChar(8)
+  street     String   @db.VarChar(50)
+  number     String   @db.VarChar(20)
+  complement String?  @db.VarChar(50)
+  district   String?  @db.VarChar(50)
+  city       String   @db.VarChar(50)
+  state      String   @db.VarChar(2)
+  createdAt  DateTime
+  updatedAt  DateTime
+  @@schema("public")
+}
