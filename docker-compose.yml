@@ -63,13 +63,41 @@ services:
     networks:
       - marketplace
 
+  marketplace_db_migr:
+    container_name: marketplace_db_migr
+    build:
+      context: modular-monolithic
+      dockerfile: prod.Dockerfile
+    depends_on:
+      marketplace_db:
+        condition: service_healthy
+    networks:
+      - marketplace
+    deploy:
+      resources:
+        limits:
+          memory: "500M"
+          cpus: "0.5"
+        reservations:
+          memory: "300M"
+    env_file:
+      - ./modular-monolithic/.env.prod
+    command: [
+      "npm",
+      "run",
+      "db:setup"
+    ]
+
   marketplace_api:
     container_name: marketplace_api
     build:
       context: modular-monolithic
+      dockerfile: prod.Dockerfile
     depends_on:
       marketplace_db:
         condition: service_healthy
+      marketplace_db_migr:
+        condition: service_completed_successfully
     ports:
       - 3000:3000
     networks:

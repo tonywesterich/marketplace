@@ -1,7 +1,7 @@
 #
 # Base
 #
-FROM node:20-alpine as base
+FROM node:current-alpine as base
 
 RUN apk update && apk add bash
 
@@ -14,6 +14,9 @@ FROM base as build
 
 COPY ./package.json ./
 RUN npm install
+
+COPY ./database ./database
+RUN npm run db:generate
 
 COPY ./tsconfig.json ./
 COPY ./src ./src
@@ -29,3 +32,4 @@ FROM base as run
 COPY --from=build /app/package*.* ./
 COPY --from=build /app/dist/ ./dist
 COPY --from=build /app/node_modules/ ./node_modules
+COPY --from=build /app/database/ ./database
