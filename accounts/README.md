@@ -40,7 +40,7 @@ Observação: somente será necessário alterar essa configuração se o serviç
 
 ## Ambiente de desenvolvimento
 
-Lembre-se que este projeto faz parte de um monorepo, portanto, antes de executar qualquer comando, certifique de ter entrado na pasta do projeto:
+Lembre-se que este projeto faz parte de um monorepo, portanto, antes de executar qualquer comando, certifique-se de ter entrado na pasta do projeto:
 ```bash
 cd .\accounts\
 ```
