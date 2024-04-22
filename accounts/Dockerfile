@@ -1,7 +1,7 @@
 #
 # Base
 #
-FROM node:18-alpine as base
+FROM node:current-alpine as base
 
 RUN apk update && apk add bash
 
