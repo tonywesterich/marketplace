@@ -3,20 +3,29 @@ name: 'Accounts - Continuous integration'
 on:
   pull_request:
     branches: [ main ]
-    paths: [ 'accounts/**' ]
+    paths:
+      - 'accounts/**'
+      - '!accounts/README.md'
+      - '!accounts/.env.dev'
+      - '!accounts/.env.default'
+      - '!accounts/.env.prod'
+      - '!accounts/.editorconfig'
+      - '!accounts/.gitignore'
+      - '!accounts/**/*Dockerfile'
+      - '!accounts/**/docker-compose.*'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [21.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://npm.pkg.github.com'
