@@ -1,17 +1,17 @@
-name: 'Modular Monolithic - Continuous integration'
+name: 'Core business - Continuous integration'
 
 on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'modular-monolithic/**'
-      - '!modular-monolithic/README.md'
-      - '!modular-monolithic/.env.default'
-      - '!modular-monolithic/.env.prod'
-      - '!modular-monolithic/.editorconfig'
-      - '!modular-monolithic/.gitignore'
-      - '!modular-monolithic/**/*.Dockerfile'
-      - '!modular-monolithic/**/docker-compose.*'
+      - 'core-business/**'
+      - '!core-business/README.md'
+      - '!core-business/.env.default'
+      - '!core-business/.env.prod'
+      - '!core-business/.editorconfig'
+      - '!core-business/.gitignore'
+      - '!core-business/**/*.Dockerfile'
+      - '!core-business/**/docker-compose.*'
 
 jobs:
   test:
@@ -58,41 +58,41 @@ jobs:
       - name: Install dependencies
         if: steps.carthage-cache.outputs.cache-hit != 'true'
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm ci
 
       - name: Code format
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm run format
           npm run lint
 
       - name: Setup Prisma
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm run db:generate
 
       - name: Setup database
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm run db:setup:test
 
       - name: Test types
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm run test:type
 
       - name: Test unit
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm run test:unit
 
       - name: Test integration
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm run test:integration
 
       - name: Test e2e
         run: |
-          cd ./modular-monolithic
+          cd ./core-business
           npm run test:e2e

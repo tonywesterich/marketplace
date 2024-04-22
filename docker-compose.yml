@@ -66,7 +66,7 @@ services:
   marketplace_db_migr:
     container_name: marketplace_db_migr
     build:
-      context: modular-monolithic
+      context: core-business
       dockerfile: prod.Dockerfile
     depends_on:
       marketplace_db:
@@ -81,7 +81,7 @@ services:
         reservations:
           memory: "300M"
     env_file:
-      - ./modular-monolithic/.env.prod
+      - ./core-business/.env.prod
     command: [
       "npm",
       "run",
@@ -91,7 +91,7 @@ services:
   marketplace_api:
     container_name: marketplace_api
     build:
-      context: modular-monolithic
+      context: core-business
       dockerfile: prod.Dockerfile
     depends_on:
       marketplace_db:
@@ -125,7 +125,7 @@ services:
       timeout: 10s
       retries: 3
     env_file:
-      - ./modular-monolithic/.env.prod
+      - ./core-business/.env.prod
     command: ["node", "--max-old-space-size=490", "./dist/main.js"]
 
 networks:
