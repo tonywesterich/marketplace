@@ -1,73 +1,77 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Core business
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este projeto é um monólito modular e contempla todas as APIs que fazem parte do _core business_ do Marketplace.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+O padrão arquitetural de monólito modular, proporciona uma separação clara das responsabilidades e impede que o _codebase_ cresça descontroladamente em uma única área. Assim, é possível evitar o acoplamento de código, além de manter a modularidade e a facilidade de manutenção.
 
-## Description
+Apesar das semelhanças no nome, deve-se tomar cuidado para não confundir a **arquitetura monolítica modular** com a **arquitetura monolítica**. A arquitetura monolítica modular, assim como na arquitetura monolítica, compartilha o mesmo _codebase_ entre todos os módulos, porém, por ser modular, os módulos podem ser _deploiados_ individualmente, exatamente como na arquitetura de microsserviços. Já, a arquitetura monolítica - que não é modular - roda em um único processo, todos os módulos juntos, formando um grande executável, inviabilizando o _deploy_ individual de módulos e possuindo forte acoplamento.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Módulos
 
-## Installation
+Este monólito modular contempla os seguintes módulos:
+- [ ] Accounts: API responsável pela validação do usuário e integração com o sistema legado de cadastro de usuários
+- [x] Customer: API responsável pelo cadastramento de clientes (_customers_)
+- [ ] Seller: API responsável pelo cadastro de vendedores, seus produtos e suas ordens de compra (_partners_)
+- [ ] Catalog: API responsável por agrupar o catálogo de produtos de todos os vendedores e responder às consultas feitas pelos consumidores
+- [ ] Order: API responsável pelas funcionalidades das ordens de compra
+- [ ] Cart: API responsável pelas funcionalidadess do carrinho de compras
 
-```bash
-$ npm install
+## Arquitetura Hexagonal (_ports and adapters_)
+
+Por serem desacoplados, cada módulo poderia adotar seu próprio estilo arquitetural, porém, para manter integridade conceitual entre todos os módulos, foi adotada a arquitetura hexagonal como padrão arquitetural em todos os módulos do monólito.
+
+A Arquitetura Hexagonal isola as regras de negócio (domínio) dos detalhes técnicos da infraestrutura (camadas externas do software), como interfaces de usuário e bancos de dados. Essa abordagem permite uma maior flexibilidade, tornando os sistemas menos suscetíveis a mudanças em tecnologias externas e facilitando a manutenção e os testes.
+
+Hexagonal sugere inversão de dependência para tudo que está fora do core da aplicação, o que permite isolar completamente o core, pois as coisas internas vão depender sempre de abstrações.
+
+
+## Estrutura de pastas (_screaming architecture_)
+
+Seguindo o conceito de [_screaming architecture_](https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html) do Uncle Bob, segue abaixo a estrutura de pastas de nível superior que refletem os _bounded contexts_ contemplados neste monólito a partir da pasta `src\`.
+
+```
+├── src
+│   accounts
+│   cart
+│   catalog
+│   customer
+│   order
+│   seller
 ```
 
-## Running the app
+Dentro de cada módulo as pastas estão organizadas da seguinte maneira:
+```
+customer
+│   domain
+│   ├── dto
+│   ├── entity
+│   ├── interfaces
+│   └── service
+│   └── value-object
+│   http
+│   └── graphql
+│       └── type
+│   persistence
+│   └── repository
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+## Tecnologias
 
-```bash
-# unit tests
-$ npm run test
+Os módulos deste monólito foram desenvolvidos com as tecnologias:
+- [NodeJS](https://nodejs.org)
+- [NestJS](https://nestjs.com/)
+- [Prisma](https://www.prisma.io/) (ORM para acesso aos dados)
+- [GraphQL](https://graphql.org/) e [Appolo](https://www.apollographql.com/)
+- [PostgreSQL](https://www.postgresql.org/) (banco de dados relacional)
+- [MongoDB](https://www.mongodb.com/) (banco de dados de documentos)
+- [Redis Queues](https://redis.io/glossary/redis-queue/) (filas)
+- [Winston](https://www.npmjs.com/package/winston) e [winston-syslog](https://www.npmjs.com/package/winston-syslog) (logger)
+- [Bcrypt](https://www.npmjs.com/package/bcrypt) (hash das senhas)
+- [Jest](https://jestjs.io/) (testes)
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
-```
 
-## Support
+## Deploy
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+A depender da necessidade, o _deploy_ poderá ser feito de cada módulo individualmente ou do monólito como um todo. Os critérios para essa escolha são excencialmente técnicos. Por exemplo, percebe-se que em produção algum dos módulos está consumindo praticamente todo o poder de processamento (CPU) da instância. Nesse caso, pode-se optar por separar o _deploy_ em duas instâncias, uma para o módulo com grande consumo de CPU e outro para os demais módulos, porém com recurso de CPU reduzidos.
