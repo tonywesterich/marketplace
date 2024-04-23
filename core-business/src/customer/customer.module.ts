@@ -7,10 +7,7 @@ import { CustomerResolver } from './http/graphql/customer.resolver';
 import { CustomerPrismaRepository } from './persistence/repository/customer.repository';
 
 @Module({
-  imports: [
-    PersistenceModule,
-    ConfigModule.forRoot(),
-  ],
+  imports: [PersistenceModule, ConfigModule.forRoot()],
   providers: [
     CustomerService,
     CustomerResolver,
