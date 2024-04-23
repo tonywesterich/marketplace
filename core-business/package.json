@@ -67,6 +67,7 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^9.0.11",
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.2.4",
@@ -81,5 +82,10 @@
   },
   "prisma": {
     "schema": "database/schema.prisma"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format && npm run lint"
+    }
   }
 }
