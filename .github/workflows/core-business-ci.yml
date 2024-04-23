@@ -86,6 +86,7 @@ jobs:
       - name: Test unit
         run: |
           cd ./core-business
+          cp .env.test .env
           npm run test:unit
 
       - name: Test integration
