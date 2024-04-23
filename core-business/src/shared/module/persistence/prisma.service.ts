@@ -23,9 +23,10 @@ export class PrismaService
         },
       },
     });
+    // eslint-disable-next-line no-console
     console.log(
       'PrismaService -> configService.get("database.url"):',
-      configService.get('database.url')
+      configService.get('database.url'),
     );
   }
 
