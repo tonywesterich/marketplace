@@ -5,7 +5,6 @@ const TEST_ENV_FILE = '.env.test';
 
 dotenv.config({ path: TEST_ENV_FILE });
 
-
 if (!fs.existsSync(TEST_ENV_FILE)) {
   throw new Error('.env.test file not found');
 }
