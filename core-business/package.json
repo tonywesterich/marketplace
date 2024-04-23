@@ -26,7 +26,8 @@
     "db:setup": "npm run db:migrate",
     "db:migrate": "prisma db push",
     "db:setup:test": "npm run db:migrate:test",
-    "db:migrate:test": "dotenv -e .env.test -- prisma db push"
+    "db:migrate:test": "dotenv -e .env.test -- prisma db push",
+    "prepare": "cd .. && husky core-business/.husky"
   },
   "engines": {
     "node": ">=20.12.2",
@@ -82,10 +83,5 @@
   },
   "prisma": {
     "schema": "database/schema.prisma"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format && npm run lint"
-    }
   }
 }

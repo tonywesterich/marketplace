@@ -1,1 +1,1 @@
-npm test
+cd core-business && npm run format && npm run lint
