@@ -70,7 +70,21 @@ Os módulos deste monólito foram desenvolvidos com as tecnologias:
 - [Bcrypt](https://www.npmjs.com/package/bcrypt) (hash das senhas)
 - [Jest](https://jestjs.io/) (testes)
 
+## Ambiente de desenvolvimento
 
+Observações:
+
+1) Lembre-se que este projeto faz parte de um monorepo, portanto, antes de executar qualquer comando, certifique-se de ter entrado na pasta do projeto;
+2) As variáveis de ambiente para o ambiente de desenvolvimento estão no `.env.default`. Para configurar o ambiente, basta copiar o arquivo para `.env`;
+3) Caso você não tenha o Docker instalado, será necessário [instalá-lo](https://docs.docker.com/get-docker/) antes de executar os passos abaixo.
+
+```bash
+cd core-business
+cp .env.default .env
+docker-compose build
+docker-compose up -d
+npm run start:dev
+```
 
 ## Deploy
 
