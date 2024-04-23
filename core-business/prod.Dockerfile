@@ -15,6 +15,9 @@ FROM base as build
 COPY ./package.json ./
 RUN npm install
 
+COPY ./database ./database
+RUN npm run db:generate
+
 COPY ./tsconfig.json ./
 COPY ./src ./src
 RUN npm run build
@@ -29,3 +32,4 @@ FROM base as run
 COPY --from=build /app/package*.* ./
 COPY --from=build /app/dist/ ./dist
 COPY --from=build /app/node_modules/ ./node_modules
+COPY --from=build /app/database/ ./database

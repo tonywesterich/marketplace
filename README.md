@@ -10,10 +10,29 @@ Nenhum dos serviços tem tratamento - em seu código fonte - para problemas iner
 
 Todos os microserviços foram desenvolvidos em Node.js, com Typescript, utilizando diversas técnicas, arquiteturas e frameworks disponíveis no riquíssimo universo do Node.js.
 
-Este monorepo contempla todos os subprojetos do Marketplace.
+## Diagrama de contexto
 
-Subprojetos:
-- [x] Accounts: API de Gerenciamento de Usuários
+![alt text](<docs/context-diagram.png>)
+
+## Diagrama de containers (não é Docker)
+
+No [modelo C4](https://c4model.com/), os diagramas de containers tem um significado diferente do Docker, é algo no qual um código possa ser executado ou algum dado ser armazenado.
+
+![alt text](<docs/container-diagram.png>)
+
+## Subprojetos:
+
+Este monorepo contempla todos os subprojetos do Marketplace:
+- [x] Accounts legacy: API legada de Gerenciamento de Usuários
+- [ ] Core business: Monolito modular contendo todas as APIs do _core business_ do marketplace
+  - [ ] Accounts: API responsável pela validação do usuário e integração com o sistema legado de cadastro de usuários
+  - [x] Customer: API responsável pelo cadastramento de clientes (_customers_)
+  - [ ] Seller: API responsável pelo cadastro de vendedores, seus produtos e suas ordens de compra (_partners_)
+  - [ ] Catalog: API responsável por agrupar o catálogo de produtos de todos os vendedores e responder às consultas feitas pelos consumidores
+  - [ ] Order: API responsável pelas funcionalidades das ordens de compra
+  - [ ] Cart: API responsável pelas funcionalidadess do carrinho de compras
+- [ ] Payment: API legada responsável pela integração com o sistema de pagamento do terceirizado
+- [ ] Shipping: API legada responsável pela integração com o sistema de transporte do terceirizado
 
 ## Logger
 
@@ -63,11 +82,15 @@ git clone https://github.com/tonywesterich/marketplace.git
 
 Caso você não tenha o Docker instalado, será necessário [instalá-lo](https://docs.docker.com/get-docker/) antes de executar os passos abaixo.
 
+Se a sua intenção for rodar o ambiente todo, basta seguir os passos abaixo:
+
 ```bash
 cd marketplace
 docker-compose build
 docker-compose up -d
 ```
+
+Agora, se a sua intenção for rodar individualmente cada subprojeto, siga as orientações que estão no README.md de cada subprojeto.
 
 ## Kubernetes
 
@@ -77,3 +100,5 @@ TODO
 
 Consulte a sessão [Exemplos de curl](./accounts/README.md#exemplos-de-curl) do User Account Management API.
 
+## CI/CD
+Este projeto não tem intenção de fazer deploy em nenhum _cloud provider_, portanto, não implementa _continous deployment (CD)_ ou _entrega continua_. Por outro lado, implementa _continous integration (CI)_ ou _integração contínua_, que é validação contínua de todo e qualquer código adicionado ao projeto.

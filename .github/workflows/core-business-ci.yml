@@ -1,0 +1,102 @@
+name: 'Core business - Continuous integration'
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'core-business/**'
+      - '!core-business/README.md'
+      - '!core-business/.env.default'
+      - '!core-business/.env.prod'
+      - '!core-business/.editorconfig'
+      - '!core-business/.gitignore'
+      - '!core-business/**/*.Dockerfile'
+      - '!core-business/**/docker-compose.*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [21.x]
+
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - '5432:5432'
+        env:
+          POSTGRES_DB: marketplace_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-nodev-${{ matrix.node-version }}
+
+      - name: Install dependencies
+        if: steps.carthage-cache.outputs.cache-hit != 'true'
+        run: |
+          cd ./core-business
+          npm ci
+
+      - name: Code format
+        run: |
+          cd ./core-business
+          npm run format
+          npm run lint
+
+      - name: Setup Prisma
+        run: |
+          cd ./core-business
+          npm run db:generate
+
+      - name: Setup database
+        run: |
+          cd ./core-business
+          npm run db:setup:test
+
+      - name: Test types
+        run: |
+          cd ./core-business
+          npm run test:type
+
+      - name: Test unit
+        run: |
+          cd ./core-business
+          cp .env.test .env
+          npm run test:unit
+
+      - name: Test integration
+        run: |
+          cd ./core-business
+          cp .env.test .env
+          npm run test:integration
+
+      - name: Test e2e
+        run: |
+          cd ./core-business
+          cp .env.test .env
+          npm run test:e2e
