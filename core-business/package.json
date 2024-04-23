@@ -29,7 +29,8 @@
     "db:migrate:test": "dotenv -e .env.test -- prisma db push"
   },
   "engines": {
-    "npm": "^9",
+    "node": ">=20.12.2",
+    "npm": ">=10.5.0",
     "yarn": "please-use-npm"
   },
   "dependencies": {
