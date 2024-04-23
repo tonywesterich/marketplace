@@ -23,6 +23,10 @@ export class PrismaService
         },
       },
     });
+    console.log(
+      'PrismaService -> configService.get("database.url"):',
+      configService.get('database.url')
+    );
   }
 
   async onModuleInit() {
