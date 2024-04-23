@@ -23,8 +23,8 @@ No [modelo C4](https://c4model.com/), os diagramas de containers tem um signific
 ## Subprojetos:
 
 Este monorepo contempla todos os subprojetos do Marketplace:
-- [x] Accounts legacy: API legada de Gerenciamento de Usuários
-- [ ] Core business: Monolito modular contendo todas as APIs do _core business_ do marketplace
+- [x] [Accounts legacy](accounts/README.md): API legada de Gerenciamento de Usuários
+- [ ] [Core business](core-business/README.md): Monolito modular contendo todas as APIs do _core business_ do marketplace
   - [ ] Accounts: API responsável pela validação do usuário e integração com o sistema legado de cadastro de usuários
   - [x] Customer: API responsável pelo cadastramento de clientes (_customers_)
   - [ ] Seller: API responsável pelo cadastro de vendedores, seus produtos e suas ordens de compra (_partners_)
