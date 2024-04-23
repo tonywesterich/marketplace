@@ -91,9 +91,11 @@ jobs:
       - name: Test integration
         run: |
           cd ./core-business
+          cp .env.test .env
           npm run test:integration
 
       - name: Test e2e
         run: |
           cd ./core-business
+          cp .env.test .env
           npm run test:e2e
