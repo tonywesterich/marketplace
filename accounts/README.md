@@ -1,8 +1,8 @@
 # User Account Management API
 
-A API de Gerenciamento de Usuários é um microserviço REST que faz parte do projeto Marketplace. Ela simula um serviço legado para cadastramento de usuários e validação de senha, somente. A autenticação e controle de acesso está fora do escopo do projeto e deverão ser implementados por outro serviço.
+A API de Gerenciamento de Usuários é um microsserviço REST que faz parte do projeto Marketplace. Ela simula um serviço legado para cadastramento de usuários e validação de senha, somente. A autenticação e controle de acesso está fora do escopo do projeto e deverão ser implementados por outro serviço.
 
-Este microserviço foi desenvolvido com as tecnologias:
+Este microsserviço foi desenvolvido com as tecnologias:
 - [NodeJS](https://nodejs.org)
 - [Express](https://expressjs.com/) (_framework_ web)
 - [InversifyJS](https://inversify.io/) (injeção de dependências)

@@ -9,12 +9,12 @@ Apesar das semelhanças no nome, deve-se tomar cuidado para não confundir a **a
 ## Módulos
 
 Este monólito modular contempla os seguintes módulos:
-- [ ] Accounts: API responsável pela validação do usuário e integração com o sistema legado de cadastro de usuários
-- [x] Customer: API responsável pelo cadastramento de clientes (_customers_)
-- [ ] Seller: API responsável pelo cadastro de vendedores, seus produtos e suas ordens de compra (_partners_)
-- [ ] Catalog: API responsável por agrupar o catálogo de produtos de todos os vendedores e responder às consultas feitas pelos consumidores
-- [ ] Order: API responsável pelas funcionalidades das ordens de compra
+- [ ] Accounts: API responsável pelo cadastramento de novos usuários, validação do login e integração com o sistema legado de cadastro de usuários
 - [ ] Cart: API responsável pelas funcionalidadess do carrinho de compras
+- [ ] Catalog: API responsável por agrupar o catálogo de produtos de todos os vendedores e responder às consultas feitas pelos consumidores
+- [x] Customer: API responsável pelo cadastramento de clientes
+- [ ] Order: API responsável pelas funcionalidades das ordens de compra
+- [ ] Seller: API responsável pelo cadastro de vendedores, seus produtos, o estoque dos produtos e suas ordens de compra
 
 ## Arquitetura Hexagonal (_ports and adapters_)
 
@@ -63,12 +63,21 @@ Os módulos deste monólito foram desenvolvidos com as tecnologias:
 - [NestJS](https://nestjs.com/)
 - [Prisma](https://www.prisma.io/) (ORM para acesso aos dados)
 - [GraphQL](https://graphql.org/) e [Appolo](https://www.apollographql.com/)
+- [Redis Queues](https://redis.io/glossary/redis-queue/) (filas)
+- [BullMQ](https://bullmq.io/) (biblioteca para processamento das filas Redis)
 - [PostgreSQL](https://www.postgresql.org/) (banco de dados relacional)
 - [MongoDB](https://www.mongodb.com/) (banco de dados de documentos)
-- [Redis Queues](https://redis.io/glossary/redis-queue/) (filas)
 - [Winston](https://www.npmjs.com/package/winston) e [winston-syslog](https://www.npmjs.com/package/winston-syslog) (logger)
 - [Bcrypt](https://www.npmjs.com/package/bcrypt) (hash das senhas)
 - [Jest](https://jestjs.io/) (testes)
+
+## GraphQL x REST
+
+Uma das premissas deste projeto é que somente o front-end terá acesso as APIs do aplicativo Marketplace. Sistemas externos não terão acesso para consumo das funcionalidades das APIs.
+
+Dada essa premissa, o uso de GraphQL é suficiente para atender todas as necessidades de interação com o front-end.
+
+Avaliar o uso do padrão REST somente faria sentido se as APIs ficassem expostas na internet, disponíveis para sistemas externos, o que não é o caso. Portanto, não será implementado o padrão REST.
 
 ## Ambiente de desenvolvimento
 
@@ -78,12 +87,75 @@ Observações:
 2) As variáveis de ambiente para o ambiente de desenvolvimento estão no `.env.default`. Para configurar o ambiente, basta copiar o arquivo para `.env`;
 3) Caso você não tenha o Docker instalado, será necessário [instalá-lo](https://docs.docker.com/get-docker/) antes de executar os passos abaixo.
 
+Para rodar o projeto, execute os comandos abaixo:
+
 ```bash
 cd core-business
 cp .env.default .env
 docker-compose build
 docker-compose up -d
 npm run start:dev
+```
+
+## Ambiente de Testes
+
+A suíte de testes cobre:
+- Testes de tipagem;
+- Testes Unitários;
+- Testes de Integração; e
+- Testes end-to-end (e2e).
+
+Para rodar os testes de tipagem, execute:
+```bash
+npm run test:type
+```
+
+Para rodar os testes unitários, execute:
+```bash
+npm run test:unit
+```
+
+Para rodar os testes de integração, execute:
+```bash
+npm run test:integration
+```
+
+Para rodar os testes end-to-end (e2e), execute:
+```bash
+npm run test:e2e
+```
+
+Para rodar todos os testes, execute:
+```bash
+npm run test
+```
+
+## Exemplos de curl
+
+Todos os módulos do monólito modular implementam apenas GraphQL para troca de dados entre os serviços.
+
+GraphQL é uma especificação, uma linguagem de consulta de API e um conjunto de ferramentas. GraphQL opera em um único endpoint usando HTTP, exemplo: `http://localhost:3000/graphql/`.
+
+Segue abaixo alguns exemplos de `curl` que poderão ser utilizados para acessar as funcionalidades das APIs do monólito modular:
+
+- Consultar o Custumer pelo seu ID (`getCustomerById`)
+```bash
+curl --request POST \
+  --url http://localhost:3000/graphql/ \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"query": "query { getCustomerById(input: { id: \"4ba0dd0d-ea07-48f5-8ced-684d9af110be\" }) { id, name, email, cpfCnpj, cellPhone, birthdate, zipCode, street, number, complement, district, city, state } }"
+}'
+```
+
+- Criar um Customer (`createCustomer`)
+```bash
+curl --request POST \
+  --url http://localhost:3000/graphql/ \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"query": "mutation { createCustomer(input: { name: \"Cliente de Teste\", email: \"test@example.com\", cpfCnpj: \"12345678901\", cellPhone: \"47999999999\", birthdate: \"2024-01-01\", zipCode: \"89123456\", street: \"Rua da Paz\", number: \"123\", complement: null, district: "Bairro Feliz", city: \"Cidade da Alegria\", state: \"XX\" }) { id, name, email, cpfCnpj, cellPhone, birthdate, zipCode, street, number, complement, district, city, state } }"
+}'
 ```
 
 ## Deploy
